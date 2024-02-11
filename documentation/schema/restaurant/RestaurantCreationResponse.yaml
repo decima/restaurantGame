@@ -1,0 +1,17 @@
+type: object
+properties:
+  name:
+    type: string
+    description: The name of the restaurant
+  cook:
+    type: object
+    properties:
+      name:
+        type: string
+        description: your username/nickname/name for the game
+      ID:
+        type: string
+        description: your employee ID
+  token:
+    type: string
+    description: your token for the game, used for authentication on API

@@ -8,4 +8,12 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     volumes:
-        - ./var/mongo:/data/db
+      - ./var/mongo:/data/db
+  doc:
+    image: redocly/redoc
+    ports:
+      - "8081:80"
+    volumes:
+      - ./documentation:/usr/share/nginx/html/doc
+    environment:
+      SPEC_URL: /doc/api.yaml

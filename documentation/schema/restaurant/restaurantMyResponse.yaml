@@ -1,0 +1,24 @@
+type: object
+properties:
+  name:
+    type: string
+    description: The name of the restaurant
+  kitchen:
+    type: object
+    description: The kitchen of the restaurant
+    properties:
+      equipment:
+        type: array
+        items:
+          type: string
+        description: The equipment ID of the kitchen
+      employees:
+        type: array
+        items:
+          type: string
+        description: The employee ID of the kitchen
+      inventory:
+        type: array
+        items:
+          type: string
+        description: List of all items

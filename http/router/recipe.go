@@ -7,5 +7,5 @@ import (
 
 func RecipeRoutes(r *gin.RouterGroup) {
 	controller := controllers.NewRecipeController()
-	r.GET("/recipes/:id", controller.GetRecipe)
+	r.GET("/:id", controller.GetRecipe)
 }

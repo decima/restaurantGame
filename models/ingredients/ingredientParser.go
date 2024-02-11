@@ -1,7 +1,7 @@
-package models
+package ingredients
 
 import (
-	"restaurantAPI/models/utils"
+	"restaurantAPI/models/constants"
 )
 
 func IngredientParser(expr string) Ingredient {
@@ -43,9 +43,9 @@ func IngredientParser(expr string) Ingredient {
 
 			currentToken, childrenResponses = processCurrentToken(currentToken, childrenResponses, argPosition)
 			responses = append(responses,
-				TransformedIngredient{
+				Transformed{
 					Ingredient: createIngredientFromChildren(childrenResponses[argPosition]),
-					Transform:  utils.TransformType(funcName),
+					Transform:  constants.TransformType(funcName),
 				})
 		case ',':
 
@@ -72,15 +72,15 @@ func IngredientParser(expr string) Ingredient {
 	}
 
 	if len(currentToken) > 0 {
-		responses = append(responses, RawIngredient{Name: string(currentToken)})
+		responses = append(responses, Raw{Name: string(currentToken)})
 	}
 	switch len(responses) {
 	case 0:
-		return RawIngredient{Name: expr}
+		return Raw{Name: expr}
 	case 1:
 		return responses[0]
 	default:
-		return CombinedIngredients{Ingredients: responses}
+		return Combined{Ingredients: responses}
 	}
 }
 
@@ -98,5 +98,5 @@ func createIngredientFromChildren(children []Ingredient) Ingredient {
 	if len(children) == 1 {
 		return children[0]
 	}
-	return CombinedIngredients{Ingredients: children}
+	return Combined{Ingredients: children}
 }

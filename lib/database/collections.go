@@ -17,9 +17,9 @@ type Collection[T Entity] interface {
 	Insert(t T) error
 	Update(t T) error
 	Delete(id ID) error
-	FindBy(criteria []Criterion, sorts []Sort, limit Limit) ([]*T, error)
-	FindOneBy(criteria []Criterion) (*T, error)
-	Find(id ID) (*T, error)
-	FindAll() ([]*T, error)
+	FindBy(criteria []Criterion, sorts []Sort, limit Limit) ([]T, error)
+	FindOneBy(criteria []Criterion) (T, error)
+	Find(id ID) (T, error)
+	FindAll() ([]T, error)
 	Truncate() error
 }

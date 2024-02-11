@@ -12,7 +12,9 @@ func Serve(address string) error {
 
 	v1 := r.Group("/api/v1")
 	// Routes
-	router.RecipeRoutes(v1)
+	router.RecipeRoutes(v1.Group("/recipes"))
+	router.CookingRoutes(v1.Group("/cooking"))
+	router.RestaurantRoutes(v1.Group("/restaurants"))
 
 	log.Info().Str("domain", "server").Msg("Starting server on " + address)
 	return r.Run(address)

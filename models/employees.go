@@ -1,37 +1,65 @@
 package models
 
-import "restaurantAPI/lib/database"
-
-type Employee struct {
-	ID    string `json:"id" bson:"_id"`
-	Name  string `json:"name" bson:"name"`
-	Stats Stats  `json:"stats" bson:"stats"`
-}
-
-func (r Employee) SetID(id database.ID) {
-	r.ID = string(id)
-}
-func (r Employee) GetID() database.ID {
-	return database.ID(r.ID)
-}
-
-func (r Employee) GetEntityName() database.CollectionName {
-	return database.Employees
-}
-
-type Stats struct {
-	Energy    int     `json:"energy" bson:"energy"`
-	EnergyMax int     `json:"energy_max" bson:"energy_max"`
-	Skills    []Skill `json:"skills" bson:"skills"`
-}
-
-type Skill string
-
-const (
-	Roasting Skill = "roasting"
-	Baking   Skill = "baking"
-	Grilling Skill = "grilling"
-	Chopping Skill = "chopping"
-	Dishing  Skill = "dishing"
-	Washing  Skill = "washing"
+import (
+	"fmt"
+	"restaurantAPI/lib/faker"
+	"restaurantAPI/models/constants"
+	"restaurantAPI/models/generators"
 )
+
+type Crew []*CrewMember
+
+type CrewMember struct {
+	ID     string            `json:"id" bson:"_id"`
+	Name   string            `json:"name" bson:"name"`
+	Bot    bool              `json:"bot" bson:"bot"`
+	Skills []constants.Skill `json:"skills" bson:"skills"`
+}
+
+func NewCrewMate(name string) *CrewMember {
+	return &CrewMember{
+		Name:   name,
+		Bot:    false,
+		Skills: constants.AllSkills(),
+	}
+}
+
+func NewBotCrewMate(skills []constants.Skill) CrewMember {
+	return CrewMember{
+		Name:   faker.PersonName(),
+		Bot:    true,
+		Skills: skills,
+	}
+}
+
+func (c *Crew) HireMember(crewMember *CrewMember) error {
+
+	crewMember.ID = generators.ShortID.Generate(func(probe string) bool {
+		_, ok := c.GetMember(probe)
+		fmt.Println(ok, probe)
+		return !ok
+	}, "C_")
+	*c = append(*c, crewMember)
+	// print all crew members
+
+	return nil
+}
+
+func (c *Crew) FireMember(id string) error {
+	for i, e := range *c {
+		if e.ID == id {
+			*c = append((*c)[:i], (*c)[i+1:]...)
+			return nil
+		}
+	}
+	return nil
+}
+
+func (c *Crew) GetMember(id string) (*CrewMember, bool) {
+	for _, e := range *c {
+		if e.ID == id {
+			return e, true
+		}
+	}
+	return nil, false
+}

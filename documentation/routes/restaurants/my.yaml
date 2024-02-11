@@ -1,0 +1,27 @@
+delete:
+  tags:
+    - restaurant
+  summary: Delete current restaurant
+  operationId: deleteRestaurant
+  parameters:
+    - name: force
+      in: query
+      schema:
+        type: boolean
+      description: If not set, the restaurant wont be deleted
+      required: false
+  responses:
+    '204':
+      description: No Content
+get:
+  tags:
+    - restaurant
+  summary: Get current restaurant
+  operationId: getRestaurant
+  responses:
+    '200':
+      description: your restaurant
+      content:
+        application/json:
+          schema:
+            $ref: '../../schema/restaurant/restaurantMyResponse.yaml'

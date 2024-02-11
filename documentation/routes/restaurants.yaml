@@ -1,0 +1,20 @@
+post:
+  tags:
+    - restaurant
+  summary: Create a new restaurant
+  operationId: createRestaurant
+  security: [ ]
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schema/restaurant/RestaurantCreationRequest.yaml'
+
+  responses:
+    '201':
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '../schema/restaurant/RestaurantCreationResponse.yaml'

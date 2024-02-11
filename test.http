@@ -1,0 +1,54 @@
+###
+GET {{baseURL}}/recipes/A1
+
+###
+POST {{baseURL}}/restaurants
+Content-Type: application/json
+
+{
+  "name": "{{restaurantName}}"
+}
+
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 201, "Response status is not 201");
+    });
+
+    client.test("Token is present", function () {
+        client.assert(response.body.token !== undefined, "Token is not defined");
+    });
+
+    client.global.set("token", response.body.token)
+    client.global.set("restaurantName", response.body.name)
+%}
+
+###
+GET {{baseURL}}/restaurants/my
+Authorization: bearer {{token}}
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is not 200");
+    });
+
+    client.test("Response body has a name", function () {
+        client.assert(response.body.name !== undefined, "Name is not defined");
+    });
+
+    client.test("Restaurant name is correct", function () {
+        client.assert(response.body.name === client.global.get("restaurantName"), "Name is not correct");
+    });
+%}
+
+###
+#DELETE {{baseURL}}/restaurants/my?force
+#Authorization: bearer {{token}}
+#
+#> {%
+#    client.test("Request executed successfully", function () {
+#        client.assert(response.status === 204, "Response status is not 204");
+#        client.global.clear("token");
+#    });
+#
+#%}

@@ -1,20 +1,24 @@
-package utils
+package constants
 
 type TransformType string
 
 const (
 	Chopped TransformType = "chopped"
 	Fried   TransformType = "fried"
-	Cooked  TransformType = "cooked"
 	Dished  TransformType = "dished"
-	Aged    TransformType = "aged"
 	Baked   TransformType = "baked"
-	Brewed  TransformType = "brewed"
-	Steamed TransformType = "steamed"
+	Boiled  TransformType = "boiled"
 	Grilled TransformType = "grilled"
+	Toasted TransformType = "toasted"
+	Sliced  TransformType = "sliced"
+
+	Burned TransformType = "burned"
+
+	Cooked  TransformType = "cooked"
+	Aged    TransformType = "aged"
+	Steamed TransformType = "steamed"
 	Cut     TransformType = "cut"
 	Crushed TransformType = "crushed"
-	Boiled  TransformType = "boiled"
 	Blended TransformType = "blended"
 	Churned TransformType = "churned"
 	Whipped TransformType = "whipped"
@@ -29,5 +33,4 @@ const (
 	Roasted TransformType = "roasted"
 	Sauteed TransformType = "sauteed"
 	Smoked  TransformType = "smoked"
-	Toasted TransformType = "toasted"
 )

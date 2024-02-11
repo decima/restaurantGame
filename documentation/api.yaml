@@ -1,0 +1,23 @@
+openapi: 3.0.3
+info:
+  title: RestaurantAPI
+  description: A game where you manage a restaurant through an API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/api/v1'
+tags:
+  - name: restaurant
+    description: Restaurant management
+paths:
+  /restaurant:
+    $ref: './routes/restaurants.yaml'
+  /restaurant/my:
+    $ref: './routes/restaurants/my.yaml'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: [ ]

@@ -2,24 +2,24 @@ package Fixtures
 
 import (
 	"fmt"
-	"restaurantAPI/lib/database"
 	"restaurantAPI/models"
-	"restaurantAPI/models/builders"
-	"restaurantAPI/models/utils"
+	"restaurantAPI/models/constants"
+	"restaurantAPI/models/transformers/builders"
+	"restaurantAPI/services"
 )
 
-func LoadRecipes(collection database.Collection[models.Recipe]) {
-	collection.Truncate()
+func LoadRecipes(collection *services.RecipesRepository) {
+	(*collection).Truncate()
 	Frying(collection)
 }
 
-func Frying(collection database.Collection[models.Recipe]) {
+func Frying(collection *services.RecipesRepository) {
 
 	recipes := []models.Recipe{
 		{
 			ID:   "A1",
 			Name: "French fries",
-			Output: builders.RawIngredientBuild(utils.Potato).
+			Output: builders.RawIngredientBuild(constants.Potato).
 				Chop().
 				Fry().
 				Build(),
@@ -27,7 +27,7 @@ func Frying(collection database.Collection[models.Recipe]) {
 		{
 			ID:   "A2",
 			Name: "Fried fish",
-			Output: builders.RawIngredientBuild(utils.Fish).
+			Output: builders.RawIngredientBuild(constants.Fish).
 				Chop().
 				Fry().
 				Build(),
@@ -35,10 +35,10 @@ func Frying(collection database.Collection[models.Recipe]) {
 		{
 			ID:   "A3",
 			Name: "Fish and chips",
-			Output: builders.RawIngredientBuild(utils.Fish).
+			Output: builders.RawIngredientBuild(constants.Fish).
 				Chop().
 				Fry().
-				Add(builders.RawIngredientBuild(utils.Potato).
+				Add(builders.RawIngredientBuild(constants.Potato).
 					Chop().
 					Fry().
 					Build(),
@@ -49,7 +49,7 @@ func Frying(collection database.Collection[models.Recipe]) {
 
 	var errors []error
 	for _, recipe := range recipes {
-		errors = append(errors, collection.Insert(recipe))
+		errors = append(errors, (*collection).Insert(&recipe))
 	}
 	fmt.Println(errors)
 }

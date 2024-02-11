@@ -7,8 +7,6 @@ import (
 	"github.com/spf13/viper"
 	"net/url"
 	"os"
-	"restaurantAPI/lib/database"
-	"restaurantAPI/lib/database/mongoAdapter"
 	"strings"
 )
 
@@ -51,7 +49,7 @@ func Load() {
 
 	if err := viper.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			err := viper.WriteConfigAs("./restaurant.yaml")
+			err := viper.WriteConfigAs("./restaurants.yaml")
 			if err != nil {
 				panic("Config file was not found and could not be created; aborting")
 			}
@@ -74,39 +72,4 @@ func DatabaseURI() url.URL {
 		Path:   viper.GetString(dbName),
 	}
 	return dbURL
-}
-
-var databaseInstance database.Client
-
-func Database() (database.Client, error) {
-
-	var err error
-
-	if databaseInstance != nil {
-		return databaseInstance, nil
-	}
-
-	switch viper.GetString(dbEngine) {
-	case "mongodb":
-		databaseInstance = mongoAdapter.NewClient(DatabaseURI())
-
-	default:
-		return nil, fmt.Errorf("unsupported database engine: %s", viper.GetString(dbEngine))
-	}
-
-	return databaseInstance, err
-
-}
-
-func Collection[T database.Entity](name database.CollectionName) (database.Collection[T], error) {
-	db, err := Database()
-	if err != nil {
-		return nil, err
-	}
-
-	switch viper.GetString(dbEngine) {
-	case "mongodb":
-		return mongoAdapter.GetCollection[T](db.(*mongoAdapter.Client), name), nil
-	}
-	return nil, fmt.Errorf("unsupported database engine: %s", viper.GetString(dbEngine))
 }

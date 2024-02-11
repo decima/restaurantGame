@@ -4,23 +4,24 @@ import (
 	"encoding/json"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"restaurantAPI/lib/database"
+	"restaurantAPI/models/ingredients"
 )
 
 type Recipe struct {
-	ID     string             `json:"id" bson:"_id" `
-	Name   string             `json:"name" bson:"name"`
-	Output ConcreteIngredient `json:"output" bson:"output"`
+	ID     string            `json:"id" bson:"_id" `
+	Name   string            `json:"name" bson:"name"`
+	Output ingredients.Final `json:"output" bson:"output"`
 }
 
-func (r Recipe) SetID(id database.ID) {
+func (r *Recipe) SetID(id database.ID) {
 	r.ID = string(id)
 }
 
-func (r Recipe) GetID() database.ID {
+func (r *Recipe) GetID() database.ID {
 	return database.ID(r.ID)
 }
 
-func (r Recipe) MarshalJSON() ([]byte, error) {
+func (r *Recipe) MarshalJSON() ([]byte, error) {
 	//marshal struct to json
 	m := map[string]interface{}{
 		"id":     r.ID,
@@ -40,8 +41,8 @@ func (r *Recipe) UnmarshalJSON(bytes []byte) error {
 	id := m["id"].(primitive.ObjectID)
 	r.ID = id.Hex()
 	r.Name = m["name"].(string)
-	r.Output = ConcreteIngredient{Ingredient: IngredientParser(m["output"].(string))}
+	r.Output = ingredients.Final{Ingredient: ingredients.IngredientParser(m["output"].(string))}
 	return nil
 }
 
-var _ database.Entity = Recipe{}
+var _ database.Entity = (*Recipe)(nil)

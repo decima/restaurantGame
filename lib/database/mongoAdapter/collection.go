@@ -13,7 +13,7 @@ type Collection[T database.Entity] struct {
 	mongoCollection *mongo.Collection
 }
 
-func (c Collection[T]) Insert(t T) error {
+func (c *Collection[T]) Insert(t T) error {
 	insert, err := c.mongoCollection.InsertOne(context.Background(), t)
 
 	if err != nil {
@@ -23,18 +23,18 @@ func (c Collection[T]) Insert(t T) error {
 	return nil
 }
 
-func (c Collection[T]) Update(t T) error {
+func (c *Collection[T]) Update(t T) error {
 	_, err := c.mongoCollection.ReplaceOne(context.Background(), map[string]interface{}{"_id": t.GetID()}, t)
 	return err
 }
 
-func (c Collection[T]) Delete(id database.ID) error {
+func (c *Collection[T]) Delete(id database.ID) error {
 	_, err := c.mongoCollection.DeleteOne(context.Background(), map[string]interface{}{"_id": id})
 	return err
 }
 
-func (c Collection[T]) FindBy(criteria []database.Criterion, sorts []database.Sort, limit database.Limit) ([]*T, error) {
-	var res []*T
+func (c *Collection[T]) FindBy(criteria []database.Criterion, sorts []database.Sort, limit database.Limit) ([]T, error) {
+	var res []T
 
 	filters := make(map[string]interface{})
 	for _, criterion := range criteria {
@@ -69,37 +69,37 @@ func (c Collection[T]) FindBy(criteria []database.Criterion, sorts []database.So
 
 	for cursor.Next(context.Background()) {
 		var item T
-		err := cursor.Decode(&item)
+		err := cursor.Decode(item)
 		if err != nil {
 			return nil, err
 		}
 
-		res = append(res, &item)
+		res = append(res, item)
 	}
 	return res, nil
 }
 
-func (c Collection[T]) FindOneBy(criteria []database.Criterion) (*T, error) {
+func (c *Collection[T]) FindOneBy(criteria []database.Criterion) (T, error) {
 	res, err := c.FindBy(criteria, nil, database.Limit{Count: 1, Offset: 0})
 	if err != nil {
-		return nil, err
+		return *new(T), err
 	}
 	if len(res) == 0 {
-		return nil, errors.New("No results found")
+		return *new(T), errors.New("No results found")
 	}
 
 	return res[0], nil
 }
 
-func (c Collection[T]) Find(id database.ID) (*T, error) {
+func (c *Collection[T]) Find(id database.ID) (T, error) {
 	return c.FindOneBy([]database.Criterion{{Field: "_id", Value: id}})
 }
 
-func (c Collection[T]) FindAll() ([]*T, error) {
+func (c *Collection[T]) FindAll() ([]T, error) {
 	return c.FindBy(nil, nil, database.Limit{Count: 0, Offset: 0})
 }
 
-func (c Collection[T]) Truncate() error {
+func (c *Collection[T]) Truncate() error {
 	_, err := c.mongoCollection.DeleteMany(context.Background(), map[string]interface{}{})
 	return err
 }
