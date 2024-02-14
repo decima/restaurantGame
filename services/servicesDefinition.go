@@ -11,9 +11,15 @@ func (sc *serviceContainer) GetContainer() *serviceContainer {
 	}).(*serviceContainer)
 }
 
+func (sc *serviceContainer) GetSecuritySigner() *securitySigner {
+	return sc.getOrPanic("securitySigner", func() (interface{}, error) {
+		return newSecuritySigner(), nil
+	}).(*securitySigner)
+}
+
 func (sc *serviceContainer) GetAuthenticator() *authenticator {
 	return sc.getOrPanic("authenticator", func() (interface{}, error) {
-		return newAuthenticator(), nil
+		return newAuthenticator(sc.GetSecuritySigner()), nil
 	}).(*authenticator)
 }
 

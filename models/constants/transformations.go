@@ -62,3 +62,11 @@ var availableTransformations = map[TransformType]Transformation{
 func AvailableTransformations() map[TransformType]Transformation {
 	return availableTransformations
 }
+
+func TransformationTotalTime(transform TransformType) int {
+	return availableTransformations[transform].HumanWorkingTime + availableTransformations[transform].AutomaticWorkingTime
+}
+
+func TransformationMaximumTime(transform TransformType) int {
+	return availableTransformations[transform].HumanWorkingTime + availableTransformations[transform].AutomaticWorkingTime + availableTransformations[transform].AllowedExtraTime
+}
