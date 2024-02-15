@@ -68,13 +68,13 @@ func (c *Collection[T]) FindBy(criteria []database.Criterion, sorts []database.S
 	}
 
 	for cursor.Next(context.Background()) {
-		var item T
-		err := cursor.Decode(item)
+		var item *T
+		err := cursor.Decode(&item)
 		if err != nil {
 			return nil, err
 		}
 
-		res = append(res, item)
+		res = append(res, *item)
 	}
 	return res, nil
 }

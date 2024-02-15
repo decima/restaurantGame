@@ -44,7 +44,11 @@ func (rc *RestaurantController) NewRestaurant(c *gin.Context) {
 		utils.InternalServerError(c, err)
 		return
 	}
-	cook, _ := restaurant.Kitchen.Crew.GetMember(cookID)
+	cook, found := restaurant.Kitchen.Crew.GetMember(cookID)
+	if !found {
+		utils.InternalServerError(c, errors.New("cook not found"))
+		return
+	}
 	utils.Created(c, output.RestaurantCreationResponse(newRestaurant.Name, cook.Name, cookID, token))
 
 }

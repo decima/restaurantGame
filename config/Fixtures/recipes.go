@@ -1,7 +1,6 @@
 package Fixtures
 
 import (
-	"fmt"
 	"restaurantAPI/models"
 	"restaurantAPI/models/constants"
 	"restaurantAPI/models/transformers/builders"
@@ -51,5 +50,4 @@ func Frying(collection *services.RecipesRepository) {
 	for _, recipe := range recipes {
 		errors = append(errors, (*collection).Insert(&recipe))
 	}
-	fmt.Println(errors)
 }

@@ -31,7 +31,7 @@ func NewRestaurant(name string, email *string) *Restaurant {
 				"EQ1": {Name: constants.CuttingStation, RequiredSkills: []constants.Skill{constants.Chopping, constants.Slicing, constants.Dicing}},
 				"EQ2": {Name: constants.Fryer, RequiredSkills: []constants.Skill{constants.Frying}},
 			},
-			Crew: Crew{},
+			Crew: &Crew{},
 			Inventory: Inventory{
 				{Ingredient: ingredients.Final{ingredients.Raw{string(constants.Potato)}}, Quantity: 10},
 				{Ingredient: ingredients.Final{ingredients.Raw{string(constants.Fish)}}, Quantity: 10},
@@ -63,7 +63,7 @@ type Kitchen struct {
 	EquipmentMaxSize int                  `json:"equipment_max_size" bson:"equipment_max_size"`
 	CrewMaxSize      int                  `json:"crew_max_size" bson:"crew_max_size"`
 	Equipment        map[string]Equipment `json:"equipment" bson:"equipment"`
-	Crew             Crew                 `json:"crew" bson:"crew"`
+	Crew             *Crew                `json:"crew" bson:"crew"`
 	Inventory        Inventory            `json:"inventory" bson:"inventory"`
 }
 
@@ -92,7 +92,7 @@ func (r *Restaurant) GetListOfEquipmentType() []string {
 
 func (r *Restaurant) GetListOfEmployeeID() []string {
 	var list []string
-	for _, v := range r.Kitchen.Crew {
+	for _, v := range *r.Kitchen.Crew {
 		list = append(list, v.ID)
 	}
 	return list
@@ -100,7 +100,7 @@ func (r *Restaurant) GetListOfEmployeeID() []string {
 
 func (r *Restaurant) GetListOfEmployeeName() []string {
 	var list []string
-	for _, v := range r.Kitchen.Crew {
+	for _, v := range *r.Kitchen.Crew {
 		list = append(list, v.Name)
 	}
 	return list
@@ -115,7 +115,7 @@ func (r *Restaurant) GetListOfInventory() []string {
 }
 
 func (r *Restaurant) HireEmployee(employee *CrewMember) error {
-	if r.Kitchen.CrewMaxSize <= len(r.Kitchen.Crew) {
+	if r.Kitchen.CrewMaxSize <= len(*r.Kitchen.Crew) {
 		return ErrKitchenIsFull
 	}
 	return r.Kitchen.Crew.HireMember(employee)

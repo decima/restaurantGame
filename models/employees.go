@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"restaurantAPI/lib/faker"
 	"restaurantAPI/models/constants"
 	"restaurantAPI/models/generators"
@@ -36,12 +35,10 @@ func (c *Crew) HireMember(crewMember *CrewMember) error {
 
 	crewMember.ID = generators.ShortID.Generate(func(probe string) bool {
 		_, ok := c.GetMember(probe)
-		fmt.Println(ok, probe)
 		return !ok
 	}, "C_")
-	*c = append(*c, crewMember)
-	// print all crew members
 
+	*c = append(*c, crewMember)
 	return nil
 }
 

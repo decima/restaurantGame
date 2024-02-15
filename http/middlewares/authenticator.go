@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"restaurantAPI/http/utils"
@@ -42,7 +41,6 @@ func AuthenticatorMiddleware() gin.HandlerFunc {
 		utils.SetRestaurant(c, restaurant)
 
 		if cookID != "" {
-			fmt.Println(cookID)
 			employee, ok := restaurant.Kitchen.Crew.GetMember(cookID)
 
 			if !ok {

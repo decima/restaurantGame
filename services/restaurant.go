@@ -62,6 +62,8 @@ func (rs *restaurantService) NewHumanCook(restaurant *models.Restaurant, cookNam
 	if err != nil {
 		return
 	}
+
+	employeeID = employee.ID
 	return
 }
 
