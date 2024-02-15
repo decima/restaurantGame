@@ -14,7 +14,7 @@ func newAuthenticator(securitySigner *securitySigner) *authenticator {
 }
 
 func (a *authenticator) Register(restaurant *models.Restaurant, cookID string) (string, error) {
-	return a.securitySigner.Encode(map[string]interface{}{
+	return a.securitySigner.Crypt(map[string]interface{}{
 		"rid": restaurant.ID,
 		"cid": cookID,
 	})
@@ -26,7 +26,7 @@ func (a *authenticator) Verify(token string) (valid bool, restaurantID string, c
 	cookID = ""
 	err = nil
 
-	valid, claims, err := a.securitySigner.Decode(token)
+	valid, claims, err := a.securitySigner.Decrypt(token)
 	rid, ok := claims["rid"].(string)
 	if !ok {
 		err = fmt.Errorf("rid not found")

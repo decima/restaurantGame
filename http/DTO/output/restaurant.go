@@ -1,6 +1,9 @@
 package output
 
-import "restaurantAPI/models"
+import (
+	"restaurantAPI/models"
+	"time"
+)
 
 type restaurantCreationResponse struct {
 	Name string `json:"name"`
@@ -45,4 +48,15 @@ func RestaurantMyResponse(restaurant *models.Restaurant) restaurantMyResponse {
 			Inventory: restaurant.GetListOfInventory(),
 		},
 	}
+}
+
+type restaurantHireTokenResponse struct {
+	URL   string    `json:"url"`
+	Token string    `json:"token"`
+	Exp   time.Time `json:"expiresAt"`
+}
+
+func NewRestaurantHireTokenResponse(URL string, Token string, exp time.Time) restaurantHireTokenResponse {
+	return restaurantHireTokenResponse{URL: URL, Token: Token, Exp: exp}
+
 }

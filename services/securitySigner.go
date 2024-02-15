@@ -14,14 +14,14 @@ func newSecuritySigner() *securitySigner {
 
 const key = "restaurant"
 
-func (s *securitySigner) Encode(item map[string]interface{}) (string, error) {
+func (s *securitySigner) Crypt(item map[string]interface{}) (string, error) {
 
 	item["iat"] = time.Now()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(item))
 	return token.SignedString([]byte(key))
 }
 
-func (s *securitySigner) Decode(token string) (valid bool, item map[string]interface{}, err error) {
+func (s *securitySigner) Decrypt(token string) (valid bool, item map[string]interface{}, err error) {
 	valid = false
 	item = nil
 	err = nil
@@ -41,6 +41,13 @@ func (s *securitySigner) Decode(token string) (valid bool, item map[string]inter
 		return
 	}
 	valid = t.Valid
-	item = map[string]interface{}(claims)
+	item = claims
+
+	if item["iat"] != nil {
+		delete(item, "iat")
+	}
+	if item["exp"] != nil {
+		delete(item, "exp")
+	}
 	return
 }

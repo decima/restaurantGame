@@ -25,7 +25,7 @@ func (sc *serviceContainer) GetAuthenticator() *authenticator {
 
 func (sc *serviceContainer) GetRestaurantService() *restaurantService {
 	return sc.getOrPanic("restaurantService", func() (interface{}, error) {
-		return newRestaurantService(sc.GetRestaurantsRepository(), sc.GetAuthenticator()), nil
+		return newRestaurantService(sc.GetRestaurantsRepository(), sc.GetAuthenticator(), sc.GetSecuritySigner()), nil
 	}).(*restaurantService)
 }
 

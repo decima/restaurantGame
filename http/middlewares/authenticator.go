@@ -52,7 +52,7 @@ func AuthenticatorMiddleware() gin.HandlerFunc {
 					Msg("Crew not found")
 				return
 			}
-			if employee.Bot {
+			if employee.IsBot() {
 				utils.Unauthorized(c)
 				log.
 					Debug().

@@ -8,7 +8,7 @@ import (
 
 func Error(c *gin.Context, code int, defaultMessage any, message ...string) {
 	if len(message) > 0 {
-		Error(c, code, strings.Join(message, ","))
+		Error(c, code, strings.Join(message, ", "))
 		return
 	}
 	log.Debug().Msgf("Error %d: %v", code, defaultMessage)

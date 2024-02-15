@@ -115,10 +115,17 @@ func (r *Restaurant) GetListOfInventory() []string {
 }
 
 func (r *Restaurant) HireEmployee(employee *CrewMember) error {
-	if r.Kitchen.CrewMaxSize <= len(r.Kitchen.Crew) {
-		return ErrKitchenIsFull
+	if ok, err := r.CanHire(); !ok {
+		return err
 	}
 	return r.Kitchen.Crew.HireMember(employee)
+}
+
+func (r *Restaurant) CanHire() (bool, error) {
+	if r.Kitchen.CrewMaxSize <= len(r.Kitchen.Crew) {
+		return false, ErrKitchenIsFull
+	}
+	return true, nil
 }
 
 var ErrKitchenIsFull = errors.New("kitchen is full")
